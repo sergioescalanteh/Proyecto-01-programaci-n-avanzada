@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GoXelaDelivery
 {
-    
+
     public struct Coordenada
     {
         private double latitud;
@@ -27,7 +27,7 @@ namespace GoXelaDelivery
         }
     }
 
-  
+
     public abstract class Persona
     {
         private string codigo;
@@ -58,7 +58,7 @@ namespace GoXelaDelivery
             this.telefono = telefono;
         }
 
-        public virtual void MostrarInformacion() 
+        public virtual void MostrarInformacion()
         {
             Console.WriteLine($"Código: {Codigo} | Nombre: {NombreCompleto} | Teléfono: {Telefono}");
         }
@@ -118,7 +118,7 @@ namespace GoXelaDelivery
             set { tipoLicencia = value; }
         }
 
-        private string estado; 
+        private string estado;
         public string Estado
         {
             get { return estado; }
@@ -156,7 +156,7 @@ namespace GoXelaDelivery
         }
     }
 
-   
+
     public abstract class Vehiculo
     {
         private string codigo;
@@ -396,3 +396,182 @@ namespace GoXelaDelivery
             return 40.0 + (Peso * 3.0) + (distancia * 3.0);
         }
     }
+
+    public class Incidencia
+    {
+        private string codigo;
+        public string Codigo
+        {
+            get { return codigo; }
+            set { codigo = value; }
+        }
+
+        private string tipo;
+        public string Tipo
+        {
+            get { return tipo; }
+            set { tipo = value; }
+        }
+
+        private string descripcion;
+        public string Descripcion
+        {
+            get { return descripcion; }
+            set { descripcion = value; }
+        }
+
+        private DateTime fecha;
+        public DateTime Fecha
+        {
+            get { return fecha; }
+            set { fecha = value; }
+        }
+
+        private string estado;
+        public string Estado
+        {
+            get { return estado; }
+            set { estado = value; }
+        }
+
+        private string accionTomada;
+        public string AccionTomada
+        {
+            get { return accionTomada; }
+            set { accionTomada = value; }
+        }
+
+        public Incidencia(string codigo, string tipo, string descripcion)
+        {
+            this.codigo = codigo;
+            this.tipo = tipo;
+            this.descripcion = descripcion;
+            this.fecha = DateTime.Now;
+            this.estado = "Abierta";
+            this.accionTomada = "En revisión";
+        }
+    }
+
+    public class Entrega
+    {
+        private string codigo;
+        public string Codigo
+        {
+            get { return codigo; }
+            set { codigo = value; }
+        }
+
+        private Cliente clienteSolicitante;
+        public Cliente ClienteSolicitante
+        {
+            get { return clienteSolicitante; }
+            set { clienteSolicitante = value; }
+        }
+
+        private Paquete paqueteAsociado;
+        public Paquete PaqueteAsociado
+        {
+            get { return paqueteAsociado; }
+            set { paqueteAsociado = value; }
+        }
+
+        private Repartidor repartidorAsignado;
+        public Repartidor RepartidorAsignado
+        {
+            get { return repartidorAsignado; }
+            set { repartidorAsignado = value; }
+        }
+
+        private Vehiculo vehiculoAsignado;
+        public Vehiculo VehiculoAsignado
+        {
+            get { return vehiculoAsignado; }
+            set { vehiculoAsignado = value; }
+        }
+
+        private DateTime fechaSolicitud;
+        public DateTime FechaSolicitud
+        {
+            get { return fechaSolicitud; }
+            set { fechaSolicitud = value; }
+        }
+
+        private double distanciaKM;
+        public double DistanciaKM
+        {
+            get { return distanciaKM; }
+            set { distanciaKM = value; }
+        }
+
+        private string tipoServicio;
+        public string TipoServicio
+        {
+            get { return tipoServicio; }
+            set { tipoServicio = value; }
+        }
+
+        private string estado;
+        public string Estado
+        {
+            get { return estado; }
+            set { estado = value; }
+        }
+
+        private double tarifaBase;
+        public double TarifaBase
+        {
+            get { return tarifaBase; }
+            set { tarifaBase = value; }
+        }
+
+        private double recargos;
+        public double Recargos
+        {
+            get { return recargos; }
+            set { recargos = value; }
+        }
+
+        private double descuentos;
+        public double Descuentos
+        {
+            get { return descuentos; }
+            set { descuentos = value; }
+        }
+
+        private double total;
+        public double Total
+        {
+            get { return total; }
+            set { total = value; }
+        }
+
+        private List<Incidencia> listaIncidencias;
+        public List<Incidencia> ListaIncidencias
+        {
+            get { return listaIncidencias; }
+            set { listaIncidencias = value; }
+        }
+
+
+        public Entrega(string codigo, Cliente cliente, Paquete paquete, double distancia, string tipoServicio)
+        {
+            if (distancia <= 0) throw new ArgumentException("La distancia debe ser mayor a 0.");
+
+            this.codigo = codigo;
+            this.clienteSolicitante = cliente;
+            this.paqueteAsociado = paquete;
+            this.distanciaKM = distancia;
+            this.tipoServicio = tipoServicio;
+            this.fechaSolicitud = DateTime.Now;
+            this.estado = "SOLICITADA";
+            this.listaIncidencias = new List<Incidencia>();
+
+            CalcularTarifa();
+        }
+
+        public Entrega(string codigo, Cliente cliente, Paquete paquete, double distancia, string tipoServicio, double descuentoEspecial)
+            : this(codigo, cliente, paquete, distancia, tipoServicio)
+        {
+            this.descuentos = descuentoEspecial;
+            this.total -= this.descuentos;
+        }
